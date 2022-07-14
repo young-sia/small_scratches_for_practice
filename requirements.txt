@@ -2,7 +2,8 @@ numpy
 pandas
 torch
 tensorflow
-pillow
-matplotlib
-opencv-python
-scipy
+selenium
+pyperclip
+requests
+prefect
+mysql-connector-python
