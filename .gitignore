@@ -1,3 +1,9 @@
-/venv
+practicing_python/web_crawling/.env
+venv
 .idea
+privacy_list.txt
 __pychahce__
+chromedriver
+chromedriver.exe
+library.txt
+image_example1.py
