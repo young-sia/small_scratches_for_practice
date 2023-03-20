@@ -6,3 +6,9 @@ opencv-python
 scikit-learn
 pandas
 scikit-image
+pillow
+requests
+flask
+google-cloud-dialogflow
+python-dotenv
+pusher

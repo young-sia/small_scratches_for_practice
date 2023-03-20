@@ -8,6 +8,11 @@ from keras.models import Sequential
 from example1_using_keras import make_training_and_validation_losses_plot
 import pandas as pd
 from skimage import io
+import requests
+from PIL import Image
+from io import BytesIO
+import urllib.request
+import time
 
 
 def vgg16():
@@ -24,7 +29,7 @@ class VariationVgg:
     def basic_4d(self, x, y):
         for i in range(len(x)):
             img = x[i]
-            img = preprocess_input(img.reshape(1, 32, 32, 3))
+            img = preprocess_input(img.reshape(1, 300, 300, 3))
             img_new = self.vgg16_model.predict(img)
             self.x5_vgg16.append(img_new)
             img_label = np.where(y[i] == 'male', 1, 0)
@@ -36,6 +41,25 @@ class VariationVgg:
             return x5_vgg16, y5
 
     # def basic_5d(self):
+
+
+def basic_4d(vgg16_model, x, y):
+    print(y)
+    x5_vgg16 = []
+    y5 = []
+    for i in range(len(x)):
+        img = x[i]
+        img = preprocess_input(img.reshape(1, 300, 300, 3))
+        img_new = vgg16_model.predict(img)
+        x5_vgg16.append(img_new)
+        img_label = np.where(y[i] == 'male', 1, 0)
+        y5.append(img_label)
+    print(y5)
+    x5_vgg16 = np.array(x5_vgg16)
+    print(x5_vgg16.shape)
+    x5_vgg16 = x5_vgg16.reshape(x5_vgg16.shape[0], x5_vgg16.shape[2], x5_vgg16.shape[3], x5_vgg16.shape[4])
+    y5 = np.array(y5)
+    return x5_vgg16, y5
 
 
 def mlp_used_model(num_features, num_classes):
@@ -78,7 +102,7 @@ def pull_gender_picture_dataset_and_renewal():
     data = pd.read_csv('통계학과딥러닝PBL_과제자료.csv')
     data_male = data[data['please_select_the_gender_of_the_person_in_the_picture'] == 'male']
     data_female = data[data['please_select_the_gender_of_the_person_in_the_picture'] == 'female']
-    final_data = pd.concat([data_male[:1000], data_female[:1000]], axis=0).reset_index(drop=True)
+    final_data = pd.concat([data_male[:10], data_female[:10]], axis=0).reset_index(drop=True)
 
     return final_data
 
@@ -88,20 +112,38 @@ def main():
     print('successfully imported data')
     x = []
     y = []
+    session = requests.Session()
+
     for i in range(data.shape[0]):
+        url = data['image_url'][i]
+        # headers = {
+        #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Safari/537.36'
+        # }
+        req = urllib.request.Request(url, headers={"User-Agent" : "Mozilla/5.0"})
+        res = urllib.request.urlopen(req).read()
+        image = Image.open(BytesIO(res))
+        image_array = np.asarray(image)
+        x.append(image_array)
+        y.append(data['please_select_the_gender_of_the_person_in_the_picture'][i])
+        # session.headers.update(headers)
+        # time.sleep(2)
+
         try:
-            image = io.imread(data.loc[i]['image_url'])
+            image = io.imread(data['image_url'][i])
             if image.shape == (300, 300, 3):
                 x.append(image)
                 y.append(data.loc[i]['please_select_the_gender_of_the_person_in_the_picture'])
+                print('y:', y)
         except:
+            print('error')
             continue
+    print(y)
     print('made x, y')
 
     model = vgg16()
     print('pulled successfully')
 
-    selected_x, selected_y = VariationVgg.basic_4d(model, x, y)
+    selected_x, selected_y = basic_4d(model, x, y)
 
     x_train, x_test, y_train, y_test = train_test_split(selected_x, selected_y, test_size=0.1, random_state=1,
                                                         stratify=selected_y)
