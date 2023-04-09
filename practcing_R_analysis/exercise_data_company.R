@@ -19,6 +19,7 @@ company.R <- cor(company.X)
 
 # 중심화된 자료행렬 C
 compnay.C <- scale(company.X, center=TRUE, scale=FALSE)
+# 표준화된 자료행렬 Z
 company.Z <- scale(company.X, center=TRUE, scale = TRUE)
 
 # 공분산행렬
