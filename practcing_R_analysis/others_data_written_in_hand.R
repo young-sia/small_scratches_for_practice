@@ -13,3 +13,11 @@ written1.R.prcomp$sdev^2
 library(psych)
 written1.R.pm <- principal(written1.R, cor="cor", nfactors = 2, rotate = "none")
 print(written1.R.pm)
+
+
+# 검증 방법들: 카이제곱, F
+written2 <- matrix(c(200, 182,
+                     23539, 22406), nrow=2, ncol=2, byrow = TRUE)
+chisq.test(written2, simulate.p.value = TRUE)
+
+fisher.test(written2)
