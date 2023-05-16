@@ -13,6 +13,7 @@
 2. 표본데이터 분석(일반, 부트스트랩): exercise_data_state.R
 3. 유의성검정(부트스트랩, 순열검정, 카이제곱검정, F 정확도 검정, t 검정):
 exercise_data_birthwt.R, exercise_data_feed.R, others_data_written_in_hand.R
+4. 선형회귀분석(일반, 부트스트랩 활용): exercise_data_gamble.R
 
 
 <다변량 분석>
@@ -23,4 +24,4 @@ exercise_data_protein.R, exercise_data_tvprog.R
 4. 정준상관분석: exercise_data_fitness.R
 5. 군집분석: exercise_data_tvprog.R, exercise_data_economics.R, exercise_data_iris.R,
 exercise_data_carpref.R
-6. 판별분석: exercise_data_iris.R, exercise_data_company.R
+6. 판별분석: exercise_data_iris.R, exercise_data_company.R, exercise_data_fish.R, exercise_data_remiss.R
